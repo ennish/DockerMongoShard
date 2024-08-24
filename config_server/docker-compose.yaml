@@ -1,0 +1,39 @@
+version: "3"
+# -e MONGO_INITDB_ROOT_USERNAME="microgame" -e MONGO_INITDB_ROOT_PASSWORD="!@#qwe123"
+services:
+  configsvr1:
+    container_name: configsvr1
+    image: img_mongo_ubt2004:latest
+    command: mongod --configsvr --replSet config_rs --port 27017
+    ports:
+      - 10001:27017
+    volumes:
+      - configsvr1:/data/db
+
+  configsvr2:
+    container_name: configsvr2
+    image: img_mongo_ubt2004:latest
+    command: mongod --configsvr --replSet config_rs --port 27017
+    ports:
+      - 10002:27017
+    volumes:
+      - configsvr2:/data/db
+
+  configsvr3:
+    container_name: configsvr3
+    image: img_mongo_ubt2004:latest
+    command: mongod --configsvr --replSet config_rs --port 27017
+    ports:
+      - 10003:27017
+    volumes:
+      - configsvr3:/data/db
+
+
+volumes:
+  configsvr1:
+  configsvr2:
+  configsvr3:
+
+networks:
+  default:
+    name: ubt-mongo-bridge
