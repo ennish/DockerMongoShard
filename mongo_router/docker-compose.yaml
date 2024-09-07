@@ -7,8 +7,10 @@ services:
     container_name: mongos
     image: img_mongo_ubt2004:latest
     command: mongos --configdb config_rs/configsvr1:27017,config_rs/configsvr2:27017,config_rs/configsvr3:27017 --port 27017
+    volumes:
+      - ./mongo_router/mongod.conf:/etc/mongod.conf
     ports:
-      - 30000:27017
+      - 9201:27017
 
 networks:
   default:

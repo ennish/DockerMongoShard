@@ -4,4 +4,6 @@ RUN apt-get update && apt-get install -y \
 vim \
 iputils-ping \
 iproute2 \
-net-tools \
+net-tools
+
+USER mongodb

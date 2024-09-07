@@ -70,17 +70,39 @@ rs.initiate(
 docker-compose -f mongo_router/docker-compose.yaml up -d
 ```
 
-Login router server and add shard in
+## Login router server and add shard in
 
 ```bash
 
 sh.addShard("shard1_rs/shardsvr1_1:27017","shard1_rs/shardsvr1_2:27017","shard1_rs/shardsvr1_3:27017")
 
 sh.addShard("shard2_rs/shardsvr2_1:27017","shard2_rs/shardsvr2_2:27017","shard2_rs/shardsvr2_3:27017")
-
 ```
-<!-- sh.addShard("shard-1-replica-set/shard-1-node-a:27017", "shard-1-replica-set/shard-1-node-b:27017", "shard-1-replica-set/shard-1-node-c:27017")
 
-sh.addShard("shard-2-replica-set/shard-2-node-a:27017", "shard-2-replica-set/shard-2-node-b:27017", "shard-2-replica-set/shard-2-node-c:27017")
+## Create database and enable sharding
 
-sh.addShard("shard-3-replica-set/shard-3-node-a:27017", "shard-3-replica-set/shard-3-node-b:27017", "shard-3-replica-set/shard-3-node-c:27017") -->
+```bash
+
+use "database"
+
+# Shard your collection, this command will automatically enable sharding if your using versions Mongo 6.0 or later.
+sh.enableSharding("database")
+
+sh.shardCollection("database.collection", {"key":hashed or ranged key})
+# e.g.
+sh.shardCollection('mydb.mycol', {'_id':'hashed'})
+```
+
+## MongoDB提供了两种分片收集策略
+
+* 散列分片使用单个字段的 哈希索引作为 分片键，以跨分片群集对数据进行分区
+
+```bash
+sh.shardCollection("<database>.<collection>", { <shard key field> : "hashed" } )
+```
+
+* 基于范围的分片可以使用多个字段作为分片键，并将数据划分为由分片键值确定的连续范围。具体参考[官方文档](https://mongodb.net.cn/manual/core/ranged-sharding/#sharding-ranged)。
+
+```bash
+sh.shardCollection("<database>.<collection>", { <shard key field> : 1, ... } )
+```
